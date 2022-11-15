@@ -39,4 +39,10 @@ describe "merchant bulk discounts index" do
 
     expect(page).to have_current_path(merchant_bulk_discount_path(@merchant1, @bulk_discount2))
   end
+
+  it "has a link to create a new discount" do
+    click_link "Create Discount"
+
+    expect(page).to have_current_path(new_merchant_bulk_discount_path(@merchant1))
+  end
 end

@@ -179,6 +179,10 @@ describe Merchant do
       expect(InvoiceItemDiscount.exists?(invoice_item_id: @ii_11.id, bulk_discount_id: bulk_discount1.id)).to eq(true)
       expect(InvoiceItemDiscount.exists?(invoice_item_id: @ii_11.id, bulk_discount_id: bulk_discount2.id)).to eq(true)
       expect(InvoiceItemDiscount.exists?(invoice_item_id: @ii_12.id, bulk_discount_id: bulk_discount2.id)).to eq(false)
+
+      @merchant3.create_invoice_item_discounts
+
+      expect(InvoiceItemDiscount.count).to eq(3)
     end
 
     xit "returns total revenue for a given invoice for the merchant" do

@@ -78,9 +78,19 @@ class Merchant < ApplicationRecord
 
   def discounted_merchant_revenue(invoice)
     create_invoice_item_discounts
+    self.discounted_items_price(invoice) + self.full_items_price(invoice)
+  end
+  
+  def discounted_items_price(invoice)
     invoice_items.joins(:bulk_discounts)
     .where(invoice_id: invoice.id)
-    .sum('(invoice_items.quantity * invoice_items.unit_price) * (bulk_discounts.percentage_discount / 100.0)')
+    .sum('(invoice_items.quantity * invoice_items.unit_price) * ((100 - bulk_discounts.percentage_discount) / 100.0)')
+  end
+
+  def full_items_price(invoice)
+    invoice_items.left_joins(:bulk_discounts)
+    .where(invoice_id: invoice.id, bulk_discounts: {id: nil})
+    .sum('(invoice_items.quantity * invoice_items.unit_price)')
   end
 end
 #self.invoice_items.joins(:bulk_discounts).select("invoice_items.*, max(SELECT bulk_discounts.percentage_discount WHERE invoice_items.quantity >= bulk_discounts.quantity_threshold) as applied_discount").

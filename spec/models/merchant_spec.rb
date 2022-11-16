@@ -108,6 +108,7 @@ describe Merchant do
 
       @item_9 = Item.create!(name: "Ball", description: "Bouncy", unit_price: 300, merchant_id: @merchant3.id)
       @item_10 = Item.create!(name: "Bone", description: "Chewy", unit_price: 300, merchant_id: @merchant3.id)
+      @item_11 = Item.create!(name: "Rope", description: "Stringy", unit_price: 300, merchant_id: @merchant3.id)
 
       @customer_1 = Customer.create!(first_name: 'Joey', last_name: 'Smith')
       @customer_2 = Customer.create!(first_name: 'Cecilia', last_name: 'Jones')
@@ -139,6 +140,7 @@ describe Merchant do
       @ii_11 = InvoiceItem.create!(invoice_id: @invoice_9.id, item_id: @item_9.id, quantity: 12, unit_price: 6, status: 2)
       @ii_12 = InvoiceItem.create!(invoice_id: @invoice_9.id, item_id: @item_10.id, quantity: 5, unit_price: 10, status: 2)
       @ii_13 = InvoiceItem.create!(invoice_id: @invoice_9.id, item_id: @item_2.id, quantity: 9, unit_price: 10, status: 2)
+      @ii_14 = InvoiceItem.create!(invoice_id: @invoice_9.id, item_id: @item_11.id, quantity: 1, unit_price: 20, status: 2)
 
       @transaction1 = Transaction.create!(credit_card_number: 203942, result: 1, invoice_id: @invoice_1.id)
       @transaction2 = Transaction.create!(credit_card_number: 230948, result: 1, invoice_id: @invoice_2.id)
@@ -186,14 +188,14 @@ describe Merchant do
     end
 
     it "returns total revenue for a given invoice for the merchant" do
-      expect(@merchant3.merchant_revenue(@invoice_9)).to eq((5*10)+(12*6))
+      expect(@merchant3.merchant_revenue(@invoice_9)).to eq((5*10)+(12*6)+(1*20))
     end
 
     it "returns discounted total revenue for a given invoice for the merchant" do
       bulk_discount1 = @merchant3.bulk_discounts.create!(percentage_discount: 10, quantity_threshold: 5)
       bulk_discount2 = @merchant3.bulk_discounts.create!(percentage_discount: 20, quantity_threshold: 10)
 
-      expect(@merchant3.discounted_merchant_revenue(@invoice_9)).to eq((5 * 10 * 0.1)+(12 * 6 * 0.2))
+      expect(@merchant3.discounted_merchant_revenue(@invoice_9)).to eq((5 * 10 * 0.9)+(12 * 6 * 0.8)+(1*20))
     end
   end
 end

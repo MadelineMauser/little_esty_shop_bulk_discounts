@@ -7,6 +7,8 @@ class InvoicesController < ApplicationController
   end
 
   def show
+    @merchant_revenue = @merchant.merchant_revenue(@invoice)
+    @discounted_merchant_revenue = @merchant.discounted_merchant_revenue(@invoice)
     @customer = @invoice.customer
     @invoice_item = InvoiceItem.where(invoice_id: params[:id]).first
   end

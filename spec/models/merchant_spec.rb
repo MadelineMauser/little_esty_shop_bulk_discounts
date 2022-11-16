@@ -185,11 +185,11 @@ describe Merchant do
       expect(InvoiceItemDiscount.count).to eq(3)
     end
 
-    xit "returns total revenue for a given invoice for the merchant" do
+    it "returns total revenue for a given invoice for the merchant" do
       expect(@merchant3.merchant_revenue(@invoice_9)).to eq((5*10)+(12*6))
     end
 
-    xit "returns discounted total revenue for a given invoice for the merchant" do
+    it "returns discounted total revenue for a given invoice for the merchant" do
       bulk_discount1 = @merchant3.bulk_discounts.create!(percentage_discount: 10, quantity_threshold: 5)
       bulk_discount2 = @merchant3.bulk_discounts.create!(percentage_discount: 20, quantity_threshold: 10)
 

@@ -68,7 +68,8 @@ class Merchant < ApplicationRecord
   end
 
   def merchant_revenue(invoice)
-    
+    invoice_items.where(invoice_id: invoice.id)
+    .sum('quantity * invoice_items.unit_price')
   end
 end
 #self.invoice_items.joins(:bulk_discounts).select("invoice_items.*, max(SELECT bulk_discounts.percentage_discount WHERE invoice_items.quantity >= bulk_discounts.quantity_threshold) as applied_discount").

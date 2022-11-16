@@ -10,7 +10,7 @@ describe "merchant bulk discounts new" do
   it "has a form to create a new bulk discount that redirects to the bulk discount index when valid data is submitted" do
    fill_in "Percentage Discount", with: 40
    fill_in "Quantity Threshold", with: 6
-   click_button "Create Discount"
+   click_button "Submit"
 
    expect(page).to have_current_path(merchant_bulk_discounts_path(@merchant1))
   end
@@ -23,7 +23,7 @@ describe "merchant bulk discounts new" do
     visit new_merchant_bulk_discount_path(@merchant1)
     fill_in "Percentage Discount", with: 40
     fill_in "Quantity Threshold", with: 6
-    click_button "Create Discount"
+    click_button "Submit"
 
     expect(page).to have_content(40)
     expect(page).to have_content(6)

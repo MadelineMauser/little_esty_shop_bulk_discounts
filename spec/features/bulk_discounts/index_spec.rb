@@ -54,6 +54,8 @@ describe "merchant bulk discounts index" do
       click_link "Delete"
     end
     expect(page).to have_current_path(merchant_bulk_discounts_path(@merchant1))
-    expect(page).not_to have_content('20%')
+    expect(page).not_to have_content("Bulk Discount #{@bulk_discount1.id}")
+    expect(page).not_to have_content("Percentage Discount: #{@bulk_discount1.percentage_discount}%")
+    expect(page).not_to have_content("Quantity Threshold: #{@bulk_discount1.quantity_threshold}")
   end
 end

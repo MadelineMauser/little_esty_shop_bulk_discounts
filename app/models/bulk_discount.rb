@@ -3,4 +3,6 @@ class BulkDiscount < ApplicationRecord
                         :quantity_threshold
 
   belongs_to :merchant
+  has_many :invoice_item_discounts
+  has_many :invoice_items, through: :invoice_item_discounts
 end

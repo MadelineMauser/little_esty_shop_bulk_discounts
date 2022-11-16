@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_15_164622) do
+ActiveRecord::Schema.define(version: 2022_11_16_134806) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -33,6 +33,13 @@ ActiveRecord::Schema.define(version: 2022_11_15_164622) do
     t.string "city"
     t.string "state"
     t.bigint "zip"
+  end
+
+  create_table "invoice_item_discounts", force: :cascade do |t|
+    t.bigint "invoice_item_id"
+    t.bigint "bulk_discount_id"
+    t.index ["bulk_discount_id"], name: "index_invoice_item_discounts_on_bulk_discount_id"
+    t.index ["invoice_item_id"], name: "index_invoice_item_discounts_on_invoice_item_id"
   end
 
   create_table "invoice_items", force: :cascade do |t|

@@ -169,20 +169,20 @@ describe Merchant do
       expect(@merchant1.best_day).to eq(@invoice_8.created_at.to_date)
     end
 
-    it "creates applicable associations between bulk discounts and invoice items" do
+    it "creates applicable associations between invoice items and their maximum bulk discounts" do
       bulk_discount1 = @merchant3.bulk_discounts.create!(percentage_discount: 10, quantity_threshold: 5)
       bulk_discount2 = @merchant3.bulk_discounts.create!(percentage_discount: 20, quantity_threshold: 10)
 
       @merchant3.create_invoice_item_discounts
 
       expect(InvoiceItemDiscount.exists?(invoice_item_id: @ii_12.id, bulk_discount_id: bulk_discount1.id)).to eq(true)
-      expect(InvoiceItemDiscount.exists?(invoice_item_id: @ii_11.id, bulk_discount_id: bulk_discount1.id)).to eq(true)
+      expect(InvoiceItemDiscount.exists?(invoice_item_id: @ii_11.id, bulk_discount_id: bulk_discount1.id)).to eq(false)
       expect(InvoiceItemDiscount.exists?(invoice_item_id: @ii_11.id, bulk_discount_id: bulk_discount2.id)).to eq(true)
       expect(InvoiceItemDiscount.exists?(invoice_item_id: @ii_12.id, bulk_discount_id: bulk_discount2.id)).to eq(false)
 
       @merchant3.create_invoice_item_discounts
 
-      expect(InvoiceItemDiscount.count).to eq(3)
+      expect(InvoiceItemDiscount.count).to eq(2)
     end
 
     it "returns total revenue for a given invoice for the merchant" do

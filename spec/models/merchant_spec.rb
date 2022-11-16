@@ -173,22 +173,23 @@ describe Merchant do
       bulk_discount1 = @merchant3.bulk_discounts.create!(percentage_discount: 10, quantity_threshold: 5)
       bulk_discount2 = @merchant3.bulk_discounts.create!(percentage_discount: 20, quantity_threshold: 10)
 
-      Merchant.create_invoice_item_discounts
+      @merchant3.create_invoice_item_discounts
 
-      expect(InvoiceItemDiscount.(invoice_item_id: @ii_12.id, bulk_discount_id: bulk_discount1.id).exists?).to eq(true)
-      expect(InvoiceItemDiscount.(invoice_item_id: @ii_11.id, bulk_discount_id: bulk_discount1.id).exists?).to eq(true)
-      expect(InvoiceItemDiscount.(invoice_item_id: @ii_11.id, bulk_discount_id: bulk_discount2.id).exists?).to eq(true)
-      expect(InvoiceItemDiscount.(invoice_item_id: @ii_11.id, bulk_discount_id: bulk_discount1.id).exists?).to eq(false)
+      expect(InvoiceItemDiscount.exists?(invoice_item_id: @ii_12.id, bulk_discount_id: bulk_discount1.id)).to eq(true)
+      expect(InvoiceItemDiscount.exists?(invoice_item_id: @ii_11.id, bulk_discount_id: bulk_discount1.id)).to eq(true)
+      expect(InvoiceItemDiscount.exists?(invoice_item_id: @ii_11.id, bulk_discount_id: bulk_discount2.id)).to eq(true)
+      expect(InvoiceItemDiscount.exists?(invoice_item_id: @ii_12.id, bulk_discount_id: bulk_discount2.id)).to eq(false)
     end
 
-    it "returns total revenue for a given invoice for the merchant" do
+    xit "returns total revenue for a given invoice for the merchant" do
       expect(@merchant3.merchant_revenue(@invoice_9)).to eq((5*10)+(12*6))
     end
 
-    it "returns discounted total revenue for a given invoice for the merchant" do
+    xit "returns discounted total revenue for a given invoice for the merchant" do
       bulk_discount1 = @merchant3.bulk_discounts.create!(percentage_discount: 10, quantity_threshold: 5)
       bulk_discount2 = @merchant3.bulk_discounts.create!(percentage_discount: 20, quantity_threshold: 10)
 
       expect(@merchant3.discounted_merchant_revenue(@invoice_9)).to eq((5 * 10 * 0.1)+(12 * 6 * 0.2))
     end
+  end
 end

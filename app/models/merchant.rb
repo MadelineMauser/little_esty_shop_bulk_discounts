@@ -55,6 +55,18 @@ class Merchant < ApplicationRecord
             .first&.created_at&.to_date
   end
 
+  def create_invoice_item_discounts
+    invoice_items.each do |invoice_item|
+      self.bulk_discounts.each do |bulk_discount|
+        unless InvoiceItemDiscount.exists?(invoice_item_id: invoice_item.id, bulk_discount_id: bulk_discount.id)
+          if invoice_item.quantity >= bulk_discount.quantity_threshold
+            InvoiceItemDiscount.create(invoice_item_id: invoice_item.id, bulk_discount_id: bulk_discount.id)
+          end
+        end
+      end
+    end
+  end
+
   def merchant_revenue(invoice)
     
   end

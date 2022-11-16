@@ -118,7 +118,7 @@ RSpec.describe 'invoices show' do
 
   it "has a link next to each invoice item that links to the show page of the bulk discount that was applied" do
     visit merchant_invoice_path(@merchant1, @invoice_1)
-    save_and_open_page
+
     click_link "Discount", match: :first
     expect(page).to have_current_path(merchant_bulk_discount_path(@merchant1, @bulk_discount1))
   end

@@ -52,6 +52,9 @@ RSpec.describe 'invoices show' do
     @transaction6 = Transaction.create!(credit_card_number: 879799, result: 0, invoice_id: @invoice_6.id)
     @transaction7 = Transaction.create!(credit_card_number: 203942, result: 1, invoice_id: @invoice_7.id)
     @transaction8 = Transaction.create!(credit_card_number: 203942, result: 1, invoice_id: @invoice_8.id)
+
+    @bulk_discount1 = @merchant1.bulk_discounts.create!(percentage_discount: 10, quantity_threshold: 5)
+    @bulk_discount2 = @merchant1.bulk_discounts.create!(percentage_discount: 20, quantity_threshold: 15)
   end
 
   it "shows the invoice information" do
@@ -94,43 +97,30 @@ RSpec.describe 'invoices show' do
       click_button "Update Invoice"
 
       expect(page).to have_content("cancelled")
-     end
+    end
 
-     within("#current-invoice-status") do
-       expect(page).to_not have_content("in progress")
-     end
+    within("#current-invoice-status") do
+      expect(page).to_not have_content("in progress")
+    end
   end
 
   it "shows the total revenue for this merchant" do
-    bulk_discount1 = @merchant1.bulk_discounts.create!(percentage_discount: 10, quantity_threshold: 5)
-    bulk_discount2 = @merchant1.bulk_discounts.create!(percentage_discount: 20, quantity_threshold: 15)
     visit merchant_invoice_path(@merchant1, @invoice_1)
 
     expect(page).to have_content(@merchant1.merchant_revenue(@invoice_1))
   end
 
   it "shows the discounted total revenue for this merchant" do
-    bulk_discount1 = @merchant1.bulk_discounts.create!(percentage_discount: 10, quantity_threshold: 5)
-    bulk_discount2 = @merchant1.bulk_discounts.create!(percentage_discount: 20, quantity_threshold: 15)
     visit merchant_invoice_path(@merchant1, @invoice_1)
 
     expect(page).to have_content(@merchant1.discounted_merchant_revenue(@invoice_1))
   end
 
   it "has a link next to each invoice item that links to the show page of the bulk discount that was applied" do
-    bulk_discount1 = @merchant1.bulk_discounts.create!(percentage_discount: 10, quantity_threshold: 5)
-    bulk_discount2 = @merchant1.bulk_discounts.create!(percentage_discount: 20, quantity_threshold: 15)
-    
     visit merchant_invoice_path(@merchant1, @invoice_1)
-    within "#invoice_item_#{@ii_1.id}" do
-      click_link "Discount"
-      expect(page).to have_current_path(merchant_bulk_discount_path(@merchant1, @bulk_discount1))
-    end
-
-    visit merchant_invoice_path(@merchant1, @invoice_1)
-    within "#invoice_item_#{@ii_11.id}" do
-      click_link "Discount"
-      expect(page).to have_current_path(merchant_bulk_discount_path(@merchant1, @bulk_discount2))
-    end
+    save_and_open_page
+    click_link "Discount", match: :first
+    expect(page).to have_current_path(merchant_bulk_discount_path(@merchant1, @bulk_discount1))
   end
 end
+
